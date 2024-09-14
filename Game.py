@@ -2,29 +2,28 @@ import pygame
 from pygame import mixer
 import random
 import math
-#for initialise
+
 pygame.init()
-#for setting width and height of window
+
 screen=pygame.display.set_mode((800,600))
 
-#title and icon
 pygame.display.set_caption("I dont know")
 icon=pygame.image.load("outer-space.png")
 pygame.display.set_icon(icon)
-#background image
+
 background=pygame.image.load("bg.png")
 
-#Backgroundsound
 mixer.music.load('moonlight-mastered-4736.mp3')
 mixer.music.play(-1)
-#Making player
+
 playerimage=pygame.image.load("pistol.png")
 playerx=400
 playerxa=0
 playery=535
+
 def player(img,x,y):
     screen.blit(img,(x,y))
-#Making enemy
+
 enemyimage=[]
 enemyx=[]
 enemyxa=[]
@@ -36,44 +35,47 @@ for i in range (noofenemies):
     enemyx.append(random.randint(0,700))
     enemyxa.append(0.5)
     enemyy.append(random.randint(0,400))
+
 def enemy(img,x,y):
     screen.blit(img,(x,y))
-print(enemyimage)
 
-#Making score
 font=pygame.font.Font('freesansbold.ttf', 32)
 textx=10
 texty=10
+
 def showscore(x,y):
     scoore=font.render("SCORE:"+str(score),True,(255,255,255))
     screen.blit(scoore,(x,y))
-#Making game over text got
+
 font2=pygame.font.Font('freesansbold.ttf', 80)
 textx2=200
 texty2=300
+
 def got(x,y):
     gameover=font2.render("GAMEOVER",True,(255,255,255))
     screen.blit(gameover,(x,y))
-#Making bullet
+
 bulletimage=pygame.image.load("bullet.png")
 bulletx=playerx+10
 bullety=playery
 bulletxa=0
+
 def bullet(img,x,y):
     screen.blit(img,(x,y))
+
 fire=0
-#Collision
+
 def collision(enemyx,enemyy,bulletx,bullety):
     distance=math.sqrt(math.pow(enemyx-bulletx,2))+(math.pow(enemyy-bullety,2))
     if distance<35:
         return True
     else:
         return False
-score=0
 
-#Game loop
+score=0
 run=True
 a=0
+
 while run:
     screen.fill((255,222,111))
     screen.blit(background,(0,0))
@@ -96,10 +98,7 @@ while run:
                 playerxa-=2
             if event.key==pygame.K_LEFT:
                 playerxa+=2                
-    #For background color and updating
-    #playery+=.5
-    #if playerx==800:
-        #  playerx=400
+
     playerx=playerx+playerxa
     if playerx <=0:
         playerx=0
@@ -121,7 +120,6 @@ while run:
         enemyx[i]+=enemyxa[i]
         colisn=collision(enemyx[i],enemyy[i],bulletx,bullety)
         
-        
         if colisn:
             bullety=playery
             fire=0
@@ -133,6 +131,7 @@ while run:
             blast=mixer.Sound("GrenadesTntBlast PE1094404.mp3")
             blast.play()
         enemy(enemyimage[i],enemyx[i],enemyy[i])
+
     if bullety<=0:
         bullety=playery
         fire=0
@@ -147,3 +146,4 @@ while run:
     showscore(textx,texty)
     
     pygame.display.update()
+    
