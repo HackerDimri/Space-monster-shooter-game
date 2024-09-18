@@ -2,7 +2,6 @@ import pygame
 from pygame import mixer
 import random
 import math
-
 pygame.init()
 
 screen=pygame.display.set_mode((800,600))
@@ -33,7 +32,7 @@ noofenemies=6
 for i in range (noofenemies):
     enemyimage.append(pygame.image.load("monster.png"))
     enemyx.append(random.randint(0,700))
-    enemyxa.append(0.5)
+    enemyxa.append(0.1)
     enemyy.append(random.randint(0,400))
 
 def enemy(img,x,y):
@@ -67,7 +66,7 @@ fire=0
 
 def collision(enemyx,enemyy,bulletx,bullety):
     distance=math.sqrt(math.pow(enemyx-bulletx,2))+(math.pow(enemyy-bullety,2))
-    if distance<35:
+    if distance<40:
         return True
     else:
         return False
@@ -77,27 +76,26 @@ run=True
 a=0
 
 while run:
-    screen.fill((255,222,111))
     screen.blit(background,(0,0))
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
-            run = False
+            pygame.quit()
         if event.type==pygame.KEYDOWN:
             if event.key==pygame.K_LEFT:
-                playerxa-=2
+                playerxa-=0.4
             if event.key==pygame.K_RIGHT:
-                playerxa+=2
+                playerxa+=0.4
             if event.key==pygame.K_SPACE:
                 fire+=1
                 bullet(bulletimage,bulletx,bullety)
-                bulletxa+=2
+                bulletxa+=1
                 bs=mixer.Sound("SpaceLaserShot PE1095407.mp3")
                 bs.play()
         if event.type==pygame.KEYUP:
             if event.key==pygame.K_RIGHT:
-                playerxa-=2
+                playerxa=0
             if event.key==pygame.K_LEFT:
-                playerxa+=2                
+                playerxa=0                
 
     playerx=playerx+playerxa
     if playerx <=0:
@@ -107,15 +105,16 @@ while run:
     for i in range (noofenemies):
         if enemyy[i] >=500:
             for j in range(noofenemies):
-                enemyy[j]=2000
+                print("work",enemyx,enemyy)
+                enemyy[j]=801
                 got(textx2,texty2)
             break
 
         if enemyx[i] >=700:
-            enemyxa[i]-=0.1
+            enemyxa[i]=-0.1
             enemyy[i]+=10
         if enemyx[i] <=0:
-            enemyxa[i]+=0.1
+            enemyxa[i]=+0.1
             enemyy[i]+=10
         enemyx[i]+=enemyxa[i]
         colisn=collision(enemyx[i],enemyy[i],bulletx,bullety)
@@ -140,8 +139,9 @@ while run:
     if fire ==0:
         bulletx=playerx+10
         bullety=playery
-    bullety-=bulletxa
-    bullet(bulletimage,bulletx,bullety)
+    if fire!=0:
+        bullety-=bulletxa
+        bullet(bulletimage,bulletx,bullety)
     player(playerimage,playerx,playery)
     showscore(textx,texty)
     
